@@ -2,6 +2,7 @@ package tp2;
 
 import java.util.ArrayList;
 
+import tp2.exceptions.DebitNotSetException;
 import tp2.turbines.Turbine;
 import tp2.turbines.Turbine1;
 import tp2.turbines.Turbine2;
@@ -9,6 +10,7 @@ import tp2.turbines.Turbine2;
 public class Main {
 	
 	private ArrayList<Turbine> turbines = new ArrayList();
+	private double reste;
 	
 	public void addTurbine(Turbine t) {
 		turbines.add(t);
@@ -26,7 +28,7 @@ public class Main {
 		turbines.get(index).setDebitMax(debitMaxM3);
 	}
 	
-	public void recursion(double elevationAmont, double debitARepartir) {
+	public void recursion(double elevationAmont, double debitARepartir) throws DebitNotSetException {
 		Turbine initiale = turbines.get(0);
 		initiale.remplirTableau(debitARepartir, elevationAmont);
 		
@@ -34,27 +36,37 @@ public class Main {
 			turbines.get(i).remplirTableau(debitARepartir, elevationAmont, turbines.get(i-1));
 		}
 		
-		System.out.println("fin génération");
 		recursionArriere(debitARepartir);
 		
 	}
 	
 	
-	private void recursionArriere(double debit) {
-		double allocation, production;
+	private void recursionArriere(double debit) throws DebitNotSetException {
+		double allocation, production =0;
 		for(int i = turbines.size()-1; i >0 ; i--) {
 			allocation = turbines.get(i).getBestAllocationAtDebit(debit);// * Turbine.DISCRETISATION;
-			production = turbines.get(i).getBestProductionAtDebit(debit);
 			debit = debit - allocation;
-			System.out.println(turbines.get(i) + " :");
-			System.out.println("Débit : " + allocation);
-			System.out.println("Production :" + production);
+			turbines.get(i).setDebitUtilise(allocation);
 		}
-		allocation = turbines.get(0).getBestAllocationAtDebit(debit);
-		production = turbines.get(0).getBestProductionAtDebit(debit);
-		System.out.println(turbines.get(0) + " :");
-		System.out.println("Débit : " + allocation);
-		System.out.println("Production :" + production);
+		
+		double dernierDebit = turbines.get(0).getBestAllocationAtDebit(debit);
+		turbines.get(0).setDebitUtilise(dernierDebit);
+		
+		this.reste = debit - dernierDebit ;
+		
+		
+		for(int i = 0; i < turbines.size() ; i++) {
+			production = turbines.get(i).getBestProductionAtDebit(turbines.get(i).getDebitUtilise()) - production;
+			turbines.get(i).setPuissanceGeneree(production);
+		}
+		
+	}
+	
+	public void resultats() {
+		for (Turbine turbine : turbines) {
+			System.out.println(turbine);
+		}
+		System.out.println("Restes : " + reste);
 	}
 
 	public static void main(String[] args) {
@@ -67,30 +79,36 @@ public class Main {
 		application.addTurbine(t1);
 		application.addTurbine(t2);
 		
-		application.recursion(172, 120);
-		
-		
-		
-		
-		Double[][] test = t1.getTab();
-		
-		for(int i = 0 ; i < test.length ; i++) {
-			for(int j = 0 ; j < test[i].length ; j++) {
-				System.out.print(test[i][j] + "   ");
-			}
-			System.out.println("");
+		try {
+			application.recursion(172, 300);
+			application.resultats();
+		} catch (DebitNotSetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		System.out.println("Fin");
 		
-		Double[][] test2 = t2.getTab();
 		
-		for(int i = 0 ; i < test2.length ; i++) {
-			for(int j = 0 ; j < test2[i].length ; j++) {
-				System.out.print(test2[i][j] + "   ");
-			}
-			System.out.println("");
-		}
-		System.out.println("Fin");
+		
+		
+//		Double[][] test = t1.getTab();
+//		
+//		for(int i = 0 ; i < test.length ; i++) {
+//			for(int j = 0 ; j < test[i].length ; j++) {
+//				System.out.print(test[i][j] + "   ");
+//			}
+//			System.out.println("");
+//		}
+//		System.out.println("Fin");
+//		
+//		Double[][] test2 = t2.getTab();
+//		
+//		for(int i = 0 ; i < test2.length ; i++) {
+//			for(int j = 0 ; j < test2[i].length ; j++) {
+//				System.out.print(test2[i][j] + "   ");
+//			}
+//			System.out.println("");
+//		}
+//		System.out.println("Fin");
 	}
 	
 	

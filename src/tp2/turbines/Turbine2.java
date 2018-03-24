@@ -29,7 +29,7 @@ public class Turbine2 extends Turbine {
 	}
 	
 	public String toString() {
-		return "Turbine 2";
+		return "Turbine 2 "+ super.toString();
 	}
 
 }
