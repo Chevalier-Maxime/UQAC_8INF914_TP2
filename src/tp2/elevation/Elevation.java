@@ -4,7 +4,7 @@ public class Elevation {
 
 	//TODO c'est peut être mieux de passer sur des float
 	//si on a des pb de mémoire/tmps de traitement
-	public static double calculElevation(int qtot) {
+	public static double calculElevation(double qtot) {
 		double res = 0;
 		
 		double t1 = 8.639f * Math.pow(10, -13) * Math.pow(qtot, 4);
@@ -17,7 +17,7 @@ public class Elevation {
 		return res;
 	}
 	
-	public static double hauteurChute(int elevationAmont, int qtot, int debit) {
+	public static double hauteurChute(double elevationAmont, double qtot, double debit) {
 		double res = 0;
 		
 		res = elevationAmont - calculElevation(qtot) - (0.5*Math.pow(10, -5) * Math.pow(debit, 2));
