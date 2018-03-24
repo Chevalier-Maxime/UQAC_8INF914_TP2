@@ -32,6 +32,8 @@ public class Turbine1 extends Turbine {
 	}
 	
 	
-	
+	public String toString() {
+		return "Turbine 1";
+	}
 
 }

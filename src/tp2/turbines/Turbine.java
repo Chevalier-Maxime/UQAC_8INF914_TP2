@@ -57,12 +57,20 @@ public abstract class Turbine {
 		}
 		
 		
-		for(int debitRestant = 0; debitRestant <= debitDisponible && debitRestant <= getDebitMax(); debitRestant+=DISCRETISATION) {
-			tab[debitRestant/DISCRETISATION][0] = 0.0;
-			for(int debitAAllouer = DISCRETISATION; debitAAllouer <= debitRestant; debitAAllouer+=DISCRETISATION) {
-				hChute = Elevation.hauteurChute(elevationAmont, debitDisponible, debitAAllouer);
-				tab[debitRestant/DISCRETISATION][debitAAllouer/DISCRETISATION] = rendement(hChute, debitAAllouer) 
-						+ t.getBestProductionAtDebit(debitDisponible - debitAAllouer);
+		for(int debitRestant = 0; /*debitRestant <= debitDisponible && */debitRestant <= getDebitMax(); debitRestant+=DISCRETISATION) {
+			if(debitRestant <= debitDisponible) {
+				tab[debitRestant/DISCRETISATION][0] = 0.0 + t.getBestProductionAtDebit(debitDisponible);
+				for(int debitAAllouer = DISCRETISATION; debitAAllouer <= debitRestant; debitAAllouer+=DISCRETISATION) {
+					hChute = Elevation.hauteurChute(elevationAmont, debitDisponible, debitAAllouer);
+					tab[debitRestant/DISCRETISATION][debitAAllouer/DISCRETISATION] = rendement(hChute, debitAAllouer) 
+							+ t.getBestProductionAtDebit(debitDisponible - debitAAllouer);
+				}
+				
+			}else {
+				tab[debitRestant/DISCRETISATION][0] = 0.0;
+				for(int debitAAllouer = DISCRETISATION; debitAAllouer <= debitRestant; debitAAllouer+=DISCRETISATION) {
+					tab[debitRestant/DISCRETISATION][debitAAllouer/DISCRETISATION] = 0.0;
+				}
 			}
 			
 		}
@@ -83,11 +91,18 @@ public void remplirTableau(double debitDisponible, double elevationAmont) {
 			return;
 		}
 		
-		for(int debitRestant = 0; debitRestant <= debitDisponible && debitRestant <= getDebitMax(); debitRestant+=DISCRETISATION) {
-			tab[debitRestant/DISCRETISATION][0] = 0.0;
-			for(int debitAAllouer = DISCRETISATION; debitAAllouer <= debitRestant; debitAAllouer+=DISCRETISATION) {
-				hChute = Elevation.hauteurChute(elevationAmont, debitDisponible, debitAAllouer);
-				tab[debitRestant/DISCRETISATION][debitAAllouer/DISCRETISATION] = rendement(hChute, debitAAllouer);
+		for(int debitRestant = 0; /*debitRestant <= debitDisponible && */ debitRestant <= getDebitMax(); debitRestant+=DISCRETISATION) {
+			if(debitRestant <= debitDisponible) {
+				tab[debitRestant/DISCRETISATION][0] = 0.0;
+				for(int debitAAllouer = DISCRETISATION; debitAAllouer <= debitRestant; debitAAllouer+=DISCRETISATION) {
+					hChute = Elevation.hauteurChute(elevationAmont, debitDisponible, debitAAllouer);
+					tab[debitRestant/DISCRETISATION][debitAAllouer/DISCRETISATION] = rendement(hChute, debitAAllouer);
+				}
+			}else {
+				tab[debitRestant/DISCRETISATION][0] = 0.0;
+				for(int debitAAllouer = DISCRETISATION; debitAAllouer <= debitRestant; debitAAllouer+=DISCRETISATION) {
+					tab[debitRestant/DISCRETISATION][debitAAllouer/DISCRETISATION] = 0.0;
+				}
 			}
 			
 		}
@@ -117,12 +132,14 @@ public void remplirTableau(double debitDisponible, double elevationAmont) {
 	}
 	
 	public double getBestAllocationAtDebit(double debit) {
+		double saveDebit = debit;
 		
 		if(debit > getDebitMax()) {
-			debit = Math.floor(getDebitMax()/DISCRETISATION);
+			debit = getDebitMax();
 		}else {
-			debit = Math.floor(debit / DISCRETISATION);
+			debit = debit - debit%DISCRETISATION;
 		}
+		//double debitArrange = 
 		return bestAllcationAtDebit.get(debit);
 	}
 	

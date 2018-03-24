@@ -27,5 +27,9 @@ public class Turbine2 extends Turbine {
 		
 		return res;
 	}
+	
+	public String toString() {
+		return "Turbine 2";
+	}
 
 }
