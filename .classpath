@@ -2,5 +2,11 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="D:/github/UQAC_8INF914_TP2/libs/commons-codec-1.10.jar"/>
+	<classpathentry kind="lib" path="D:/github/UQAC_8INF914_TP2/libs/commons-collections4-4.1.jar"/>
+	<classpathentry kind="lib" path="D:/github/UQAC_8INF914_TP2/libs/poi-3.17.jar"/>
+	<classpathentry kind="lib" path="D:/github/UQAC_8INF914_TP2/libs/poi-ooxml-3.17.jar"/>
+	<classpathentry kind="lib" path="D:/github/UQAC_8INF914_TP2/libs/poi-ooxml-schemas-3.17.jar"/>
+	<classpathentry kind="lib" path="D:/github/UQAC_8INF914_TP2/libs/xmlbeans-2.6.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
