@@ -190,4 +190,12 @@ public abstract class Turbine {
 	public void setPuissanceGeneree(double production) {
 		this.puissanceGenere = production;
 	}
+
+	public void reinit() {
+		setDebitUtilise(0.0);
+		setPuissanceGeneree(0.0);
+		tab= null;
+		tailleTabLigne = -1;
+		
+	}
 }

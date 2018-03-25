@@ -27,6 +27,7 @@ public class Main {
 	}
 	
 	public void recursion(double elevationAmont, double debitARepartir) throws DebitNotSetException {
+		reinitialiser();
 		//TODO reinitialiser les trubines
 		int premiereTurbine = 0;
 		while(premiereTurbine < turbines.size() && !turbines.get(premiereTurbine).getActive()) premiereTurbine++;
@@ -49,6 +50,12 @@ public class Main {
 	}
 	
 	
+	private void reinitialiser() {
+		for (Turbine turbine : turbines) {
+			turbine.reinit();
+		}
+	}
+
 	private void recursionArriere(double debit) throws DebitNotSetException {
 		double allocation, productionPrecedente, production = 0;
 		
@@ -112,6 +119,10 @@ public class Main {
 		try {
 			application.recursion(172.11, 549.958);
 			application.resultats();
+			
+			application.recursion(172.11, 600);
+			application.resultats();
+			
 		} catch (DebitNotSetException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
