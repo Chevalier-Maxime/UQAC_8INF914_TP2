@@ -26,6 +26,7 @@ public class Turbine2 extends Turbine {
 		res = 32.35 + t2 + t3 + t4 + t5 - t6;
 		
 		return res;
+		//return 1001.0;
 	}
 	
 	public String toString() {

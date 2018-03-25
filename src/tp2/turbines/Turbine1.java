@@ -29,6 +29,7 @@ public class Turbine1 extends Turbine {
 		res = 32.15 + t2 + t3 - t4 + t5 - t6 - t7 + t8 - t9;
 		
 		return res;
+		//return 101.0;
 	}
 	
 	
