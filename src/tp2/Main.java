@@ -3,22 +3,27 @@ package tp2;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import tp2.exceptions.DebitNotSetException;
+import tp2.exceptions.PuissanceNotSetException;
 import tp2.turbines.*;
 
 
 
 public class Main {
 	
-	private ArrayList<Turbine> turbines = new ArrayList();
+	private  ArrayList<Turbine> turbines = new ArrayList();
 	private double reste;
 	
 	public void addTurbine(Turbine t) {
@@ -104,21 +109,68 @@ public class Main {
 		
 	}
 	
-	public void resultats() {
+	public void resultats() throws IOException, DebitNotSetException, PuissanceNotSetException {
+		
+		FileInputStream inputStream = new FileInputStream(new File("partie2.xlsx"));
+		XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
+		Sheet feuille;
+		
+		if (workbook.getSheet("resultat") != null) {
+			feuille = workbook.getSheet("resultat");
+		}else {
+			feuille = workbook.createSheet("resultat");
+		}
+		Row titre = feuille.createRow(0);
+		titre.createCell(1).setCellValue("Debit T1");
+		titre.createCell(2).setCellValue("Puissance T1");
+		
+		titre.createCell(3).setCellValue("Debit T2");
+		titre.createCell(4).setCellValue("Puissance T2");
+		
+		titre.createCell(5).setCellValue("Debit T3");
+		titre.createCell(6).setCellValue("Puissance T3");
+		
+		titre.createCell(7).setCellValue("Debit T4");
+		titre.createCell(8).setCellValue("Puissance T4");
+		
+		titre.createCell(9).setCellValue("Debit T5");
+		titre.createCell(10).setCellValue("Puissance T5");
+		
+		titre.createCell(11).setCellValue("Reste");
+		
+		int j = feuille.getPhysicalNumberOfRows();
+		Row newrow = feuille.createRow(j+1);
+
 		for (Turbine turbine : turbines) {
 			System.out.println(turbine);
+			int i = newrow.getPhysicalNumberOfCells();
+			newrow.createCell(i+1).setCellValue(turbine.getDebitUtilise());
+			newrow.createCell(i+2).setCellValue(turbine.getPuissanceGeneree());
 		}
 		System.out.println("Restes : " + reste);
+		newrow.createCell(newrow.getPhysicalNumberOfCells()+1).setCellValue(reste);
+		
+		if(feuille.getPhysicalNumberOfRows() == 202) {
+			System.out.println("FIN");
+			Row fin = feuille.createRow(feuille.getPhysicalNumberOfRows()+1);
+			fin.createCell(1).setCellValue("FIN");
+		}
+		
+		FileOutputStream fileOut;
+        fileOut = new FileOutputStream(new File("partie2.xlsx"));
+        workbook.write(fileOut);
+        fileOut.close();
+     
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException{
 		
 		// Read XSL file
         FileInputStream inputStream = new FileInputStream(new File("partie2.xlsx"));
  
         // Get the workbook instance for XLS file
         XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
- 
+      
         // Get first sheet from the workbook
         XSSFSheet sheet = workbook.getSheetAt(0);
  
@@ -129,6 +181,7 @@ public class Main {
         Double debitARepartir;
         
         while (rowIterator.hasNext()) {
+        	
         	Main application = new Main();
         	Row row = rowIterator.next();
             row.getCell(0);
@@ -178,14 +231,22 @@ public class Main {
             try {
 				application.recursion(elevationAmont, debitARepartir);
 				application.resultats();
-				
+
 			} catch (DebitNotSetException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
-            
+			} catch (PuissanceNotSetException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}  
             
         }
+        
+
+
+        
+        
+        
             
 
 		// TODO Auto-generated method stub
