@@ -15,74 +15,129 @@ import tp2.exceptions.DebitNotSetException;
 import tp2.turbines.*;
 
 
-
+/**
+ * Application principale
+ * @author cheva
+ *
+ */
 public class Main {
 	
+	/**
+	 * Liste des turbines
+	 */
 	private ArrayList<Turbine> turbines = new ArrayList();
+	
+	/**
+	 * Débit non turbiné
+	 */
 	private double reste;
 	
+	/**
+	 * Ajoute la turbine à la liste
+	 * @param t	La turbine à ajouter
+	 */
 	public void addTurbine(Turbine t) {
 		turbines.add(t);
 	}
 	
+	/**
+	 * Active la turbine à l'index désigné dans la liste
+	 * @param index
+	 */
 	public void activateTurbine(int index) {
-		turbines.get(index).setActive(true);
+		if(index < turbines.size())
+			turbines.get(index).setActive(true);
 	}
 	
+	/**
+	 * Desactive  la turbine à l'index désigné dans la liste
+	 * @param index
+	 */
 	public void desactivateTurbine(int index) {
-		turbines.get(index).setActive(false);
+		if(index < turbines.size())
+			turbines.get(index).setActive(false);
 	}
 	
+	/**
+	 * Defini le débit turbiné maximum possible pour la turbine à l'index designé
+	 * @param index			L'index de la turbine à modifier
+	 * @param debitMaxM3	Le débit maximum
+	 */
 	public void setDebitMaxTurbine(int index, double debitMaxM3) {
-		turbines.get(index).setDebitMax(debitMaxM3);
+		if(index < turbines.size())
+			turbines.get(index).setDebitMax(debitMaxM3);
 	}
 	
+	/**
+	 * Boucle principale de l'algorithme. Effectue la récurtion initiale pour définir les tableaux de 
+	 * chaque turbine.
+	 * @param elevationAmont			Elevation amont
+	 * @param debitARepartir			Qtot à répartir
+	 * @throws DebitNotSetException		Exception si une des turbines n'as pas son debit à la fin
+	 */
 	public void recursion(double elevationAmont, double debitARepartir) throws DebitNotSetException {
 		reinitialiser();
-		//TODO reinitialiser les trubines
+		
+		//On cherche la première turbine acitvée
 		int premiereTurbine = 0;
 		while(premiereTurbine < turbines.size() && !turbines.get(premiereTurbine).getActive()) premiereTurbine++;
 		if(premiereTurbine >= turbines.size()) {
 			this.reste = debitARepartir;
 			return;
 		}
+		
+		//On initialise le traitement
 		Turbine initiale = turbines.get(premiereTurbine);
 		initiale.remplirTableau(debitARepartir, elevationAmont);
 		
+		//On fait la récurstion
 		int derniereTurbine = premiereTurbine;
 		for(int i = premiereTurbine+1; i < turbines.size() ; i ++) {
+			//On passe les turbines inactives
 			if(!turbines.get(i).getActive()) {
 				continue;
 			}
 			turbines.get(i).remplirTableau(debitARepartir, elevationAmont, turbines.get(derniereTurbine));
 			derniereTurbine = i;
 		}
+		
+		//On lance la récursion arrière pour trouver les valeurs
 		recursionArriere(debitARepartir);
 	}
 	
-	
+	/**
+	 * Permet de réinitialiser toutes les turbines
+	 */
 	private void reinitialiser() {
 		for (Turbine turbine : turbines) {
 			turbine.reinit();
 		}
 	}
 
+	/**
+	 * Retrouve les meilleurs valeurs via la récursion arrière
+	 * @param debit						Qtot à turbiner
+	 * @throws DebitNotSetException		Si une des turbines n'a pas son débit de set
+	 */
 	private void recursionArriere(double debit) throws DebitNotSetException {
 		double allocation, productionPrecedente, production = 0;
 		
+		//On passe les turbines inactives
 		int premiereTurbine = turbines.size() -1;
 		while(!turbines.get(premiereTurbine).getActive()) premiereTurbine--;
+		
+		//On fait la récursion arrière
 		int turbinePrecedente;
 		for(int i = premiereTurbine; i >=0 ; i--) {
+			//On passe les trubines inactives
 			if(turbines.get(i).getActive()) {
-				
-				
-				
 				allocation = turbines.get(i).getBestAllocationAtDebit(debit);
 				debit = debit - allocation;
 				turbines.get(i).setDebitUtilise(allocation);
 				
+				//Permet de traiter différement la dernière turbine
 				if(i != 0) {
+					//On passe les turbines incatives
 					turbinePrecedente = i-1;
 					while(turbinePrecedente>= 0 && !turbines.get(turbinePrecedente).getActive()) turbinePrecedente --;
 					
@@ -104,6 +159,9 @@ public class Main {
 		
 	}
 	
+	/**
+	 * Affichage textuel des résultats
+	 */
 	public void resultats() {
 		for (Turbine turbine : turbines) {
 			System.out.println(turbine);
@@ -240,6 +298,11 @@ public class Main {
 //		System.out.println("Fin");
 	}
 	
+	
+	/**
+	 * Affiche le tableau de données de la turbine t
+	 * @param t		La turbine dont on veut afficher le tableau
+	 */
 	public static void printTab(Turbine t) {
 		if(!t.getActive()) return;
 		Double[][] test2 = t.getTab();

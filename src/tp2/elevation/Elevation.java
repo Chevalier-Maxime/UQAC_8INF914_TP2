@@ -1,9 +1,22 @@
 package tp2.elevation;
 
+/**
+ * Module de calcul de la hauteur de chute en fonction
+ * de l'elevation amont, le débit turbiné total et 
+ * du débit de la turbine.
+ * @author cheva
+ *
+ */
 public class Elevation {
 
 	//TODO c'est peut être mieux de passer sur des float
 	//si on a des pb de mémoire/tmps de traitement
+	
+	/**
+	 * Approximation de la fonction d'elevation
+	 * @param qtot	Le debit total turbiné à la centrale
+	 * @return Elevation aval
+	 */
 	public static double calculElevation(double qtot) {
 		double res = 0;
 		
@@ -17,6 +30,13 @@ public class Elevation {
 		return res;
 	}
 	
+	/**
+	 * Calcul de la hauteur de chute
+	 * @param elevationAmont	Elevation Amont
+	 * @param qtot				Débit total turbiné à la centrale
+	 * @param debit				Débit turbiné par la turbine
+	 * @return					La hauteur de chute
+	 */
 	public static double hauteurChute(double elevationAmont, double qtot, double debit) {
 		double res = 0;
 		

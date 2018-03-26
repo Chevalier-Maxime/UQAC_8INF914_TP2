@@ -1,5 +1,10 @@
 package tp2.turbines;
 
+/**
+ * Représentation de la turbine 2 des Chutes du Diable
+ * @author cheva
+ *
+ */
 public class Turbine2 extends Turbine {
 
 	public Turbine2(boolean active, int maxDebitM3) {

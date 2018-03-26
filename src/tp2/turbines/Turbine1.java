@@ -2,6 +2,11 @@ package tp2.turbines;
 
 import tp2.elevation.Elevation;
 
+/**
+ * Représentation de la turbine 1 des Chutes du Diable
+ * @author cheva
+ *
+ */
 public class Turbine1 extends Turbine {
 
 	public Turbine1(boolean active, int maxDebitM3) {
