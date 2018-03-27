@@ -17,6 +17,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import tp2.exceptions.DebitNotSetException;
 import tp2.exceptions.PuissanceNotSetException;
+import tp2.exceptions.TurbineNotFoundException;
 import tp2.turbines.*;
 
 
@@ -48,21 +49,35 @@ public class Main {
 	}
 	
 	/**
-	 * Active la turbine à l'index désigné dans la liste
-	 * @param index
+	 * Active la turbine spécifiée si elle est dans la liste
+	 * @param t La turbine a activer
+	 * @throws TurbineNotFoundException 
 	 */
-	public void activateTurbine(int index) {
-		if(index < turbines.size())
-			turbines.get(index).setActive(true);
+	public void activateTurbine(Turbine t) throws TurbineNotFoundException {
+		for (Turbine turbine : turbines) {
+			//On test la référence
+			if(turbine == t) {
+				turbine.setActive(true);
+				return;
+			}
+		}
+		throw new TurbineNotFoundException();
 	}
 	
 	/**
-	 * Desactive  la turbine à l'index désigné dans la liste
-	 * @param index
+	 * Desactive  la turbine spécifiée si elle est dans la liste
+	 * @param t La turbine a activer
+	 * @throws TurbineNotFoundException 
 	 */
-	public void desactivateTurbine(int index) {
-		if(index < turbines.size())
-			turbines.get(index).setActive(false);
+	public void desactivateTurbine(Turbine t) throws TurbineNotFoundException {
+		for (Turbine turbine : turbines) {
+			//On test la référence
+			if(turbine == t) {
+				turbine.setActive(false);
+				return;
+			}
+		}
+		throw new TurbineNotFoundException();
 	}
 	
 	/**
@@ -242,69 +257,74 @@ public class Main {
         
         Double elevationAmont;
         Double debitARepartir;
+        int debitMax = 180;
         
-        while (rowIterator.hasNext()) {
-        	
-        	Main application = new Main();
-        	Row row = rowIterator.next();
-            row.getCell(0);
-            //pour t1 
-            if( row.getCell(2).getNumericCellValue() != 0) {
-            	Turbine t1 = new Turbine1(true, 165);
-            	application.addTurbine(t1);
-            }else {
-            	Turbine t1 = new Turbine1(false, 165);
-            	application.addTurbine(t1);
-            }
-          //pour t2 
-            if( row.getCell(3).getNumericCellValue() != 0) {
-            	Turbine t2 = new Turbine2(true, 165);
-            	application.addTurbine(t2);
-            }else {
-            	Turbine t2 = new Turbine2(false, 165);
-            	application.addTurbine(t2);
-            }
-          //pour t3 
-            if( row.getCell(4).getNumericCellValue() != 0) {
-            	Turbine t3 = new Turbine3(true, 165); 
-            	application.addTurbine(t3);
-            }else {
-            	Turbine t3 = new Turbine3(false, 165);
-            	application.addTurbine(t3);
-            }
-          //pour t4 
-            if( row.getCell(5).getNumericCellValue() != 0) {
-            	Turbine t4 = new Turbine4(true, 165);
-            	application.addTurbine(t4);
-            }else {
-            	Turbine t4 = new Turbine4(false, 165);
-            	application.addTurbine(t4);
-            }
-          //pour t5 
-            if( row.getCell(6).getNumericCellValue() != 0) {
-            	Turbine t5 = new Turbine5(true, 165);
-            	application.addTurbine(t5);
-            }else {
-            	Turbine t5 = new Turbine5(false, 165);
-            	application.addTurbine(t5);
-            }
-            elevationAmont =  row.getCell(1).getNumericCellValue();
-            debitARepartir = row.getCell(0).getNumericCellValue();
-            
-            try {
+        Main application = new Main();
+        Turbine t1 = new Turbine1(true, debitMax);
+        Turbine t2 = new Turbine2(true, debitMax);
+        Turbine t3 = new Turbine3(true, debitMax); 
+        Turbine t4 = new Turbine4(true, debitMax);
+        Turbine t5 = new Turbine5(true, debitMax);
+        
+        application.addTurbine(t1);
+        application.addTurbine(t2);
+        application.addTurbine(t3);
+        application.addTurbine(t4);
+        application.addTurbine(t5);
+        
+        try {
+	        while (rowIterator.hasNext()) {
+	
+	        	Row row = rowIterator.next();
+	            row.getCell(0);
+	            
+	            //pour t1 
+	             Cell c = row.getCell(2);
+	             Double value = c.getNumericCellValue();
+	            if( row.getCell(2).getNumericCellValue() != 0) {
+	            	application.activateTurbine(t1);
+	            }else {
+	            	application.desactivateTurbine(t1);
+	            }
+	          //pour t2 
+	            if( row.getCell(3).getNumericCellValue() != 0) {
+	            	application.activateTurbine(t2);
+	            }else {
+	            	application.desactivateTurbine(t2);
+	            }
+	          //pour t3 
+	            if( row.getCell(4).getNumericCellValue() != 0) {
+	            	application.activateTurbine(t3);
+	            }else {
+	            	application.desactivateTurbine(t3);
+	            }
+	          //pour t4 
+	            if( row.getCell(5).getNumericCellValue() != 0) {
+	            	application.activateTurbine(t4);
+	            }else {
+	            	application.desactivateTurbine(t4);
+	            }
+	          //pour t5 
+	            if( row.getCell(6).getNumericCellValue() != 0) {
+	            	application.activateTurbine(t5);
+	            }else {
+	            	application.desactivateTurbine(t5);
+	            }
+	            elevationAmont =  row.getCell(1).getNumericCellValue();
+	            debitARepartir = row.getCell(0).getNumericCellValue();
 				application.recursion(elevationAmont, debitARepartir);
 				application.resultats();
-
-			} catch (DebitNotSetException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (PuissanceNotSetException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}  
-            
-        }
-        
+	        }
+		} catch (DebitNotSetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (PuissanceNotSetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TurbineNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}          
 
 
         
