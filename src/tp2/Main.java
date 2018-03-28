@@ -272,6 +272,8 @@ public class Main {
         application.addTurbine(t4);
         application.addTurbine(t5);
         
+        long duration = 0;
+        int count = 0;
         try {
 	        while (rowIterator.hasNext()) {
 	
@@ -312,8 +314,18 @@ public class Main {
 	            }
 	            elevationAmont =  row.getCell(1).getNumericCellValue();
 	            debitARepartir = row.getCell(0).getNumericCellValue();
-				application.recursion(elevationAmont, debitARepartir);
+				
+	            long startTime = System.nanoTime();
+	            application.recursion(elevationAmont, debitARepartir);
+	            long endTime = System.nanoTime();
+	            
+	            duration = duration + (endTime - startTime);
+	            
+	            count++;
+	            
 				application.resultats();
+				
+				
 	        }
 		} catch (DebitNotSetException e) {
 			// TODO Auto-generated catch block
@@ -326,7 +338,10 @@ public class Main {
 			e.printStackTrace();
 		}          
 
-
+        long durationMoy = duration / count;
+        
+        System.out.println("Total compute time = " + duration);
+        System.out.println("Moy par simulation = "+ durationMoy);
         
         
         

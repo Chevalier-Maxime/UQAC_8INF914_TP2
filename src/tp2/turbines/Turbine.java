@@ -141,7 +141,7 @@ public abstract class Turbine {
 		this.tab = new Double[tailleTabLigne][tailleTabColonne];
 		
 		//Bornes
-		if(debitDisponible == 0 || this.active == false) {
+		if(/*debitDisponible == 0 || */this.active == false) {
 			double debitRestant = debitDisponible;
 			for(int i = 0 ; i < tailleTabLigne; i++) {
 				for(int j = 0 ; j < tailleTabColonne; j++) {
