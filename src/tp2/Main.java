@@ -185,8 +185,7 @@ public class Main {
 	/**
 	 * Affichage textuel des résultats
 	 */
-
-	public void resultats() throws IOException, DebitNotSetException, PuissanceNotSetException {
+	public ArrayList<Turbine> resultats() throws IOException, DebitNotSetException, PuissanceNotSetException {
 		
 		FileInputStream inputStream = new FileInputStream(new File("partie2.xlsx"));
 		XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
@@ -218,9 +217,9 @@ public class Main {
 		int j = feuille.getPhysicalNumberOfRows();
 		Row newrow = feuille.createRow(j+1);
 
-
+                
 		for (Turbine turbine : turbines) {
-			System.out.println(turbine);
+			//System.out.println(turbine);
 			int i = newrow.getPhysicalNumberOfCells();
 			newrow.createCell(i+1).setCellValue(turbine.getDebitUtilise());
 			newrow.createCell(i+2).setCellValue(turbine.getPuissanceGeneree());
@@ -238,13 +237,14 @@ public class Main {
         fileOut = new FileOutputStream(new File("partie2.xlsx"));
         workbook.write(fileOut);
         fileOut.close();
+            return turbines;
      
 	}
 
-	public static void main(String[] args) throws IOException{
+	public static void main(String[] args) throws IOException, PuissanceNotSetException{
 		
-		// Read XSL file
-        FileInputStream inputStream = new FileInputStream(new File("partie2.xlsx"));
+	/*	// Read XSL file
+       FileInputStream inputStream = new FileInputStream(new File("partie2.xlsx"));
  
         // Get the workbook instance for XLS file
         XSSFWorkbook workbook = new XSSFWorkbook(inputStream);
@@ -341,38 +341,38 @@ public class Main {
         long durationMoy = duration / count;
         
         System.out.println("Total compute time = " + duration);
-        System.out.println("Moy par simulation = "+ durationMoy);
+        System.out.println("Moy par simulation = "+ durationMoy);*/
         
         
         
             
 
-		// TODO Auto-generated method stub
+		//TODO Auto-generated method stub;
 
-		//Main application = new Main();
-		//Turbine t1 = new Turbine1(true, 165);
-		//Turbine t2 = new Turbine2(true, 165);
-		//Turbine t3 = new Turbine3(true, 165);
-		//Turbine t4 = new Turbine4(false, 165);
-		//Turbine t5 = new Turbine5(true, 165);
+		Main application = new Main();
+		Turbine t1 = new Turbine1(true, 180);
+		Turbine t2 = new Turbine2(true, 180);
+		Turbine t3 = new Turbine3(true, 180);
+		Turbine t4 = new Turbine4(false, 180);
+		Turbine t5 = new Turbine5(true, 180);
+	
+		application.addTurbine(t1);
+		application.addTurbine(t2);
+		application.addTurbine(t3);
+		application.addTurbine(t4);
+		application.addTurbine(t5);
 		
-		//application.addTurbine(t1);
-		//application.addTurbine(t2);
-		//application.addTurbine(t3);
-		//application.addTurbine(t4);
-		//application.addTurbine(t5);
-		
-		//try {
-		//	application.recursion(172.11, 549.958);
-		//	application.resultats();
+		try {
+			application.recursion(172.11, 549.958);
+			application.resultats();
 			
-		//	application.recursion(172.11, 600);
-		//	application.resultats();
+			application.recursion(172.11, 600);
+			application.resultats();
 			
-		//} catch (DebitNotSetException e) {
+		} catch (DebitNotSetException e) {
 			// TODO Auto-generated catch block
-		//	e.printStackTrace();
-		//}
+			e.printStackTrace();
+		}
 		
 //		printTab(t1);
 //		printTab(t2);
