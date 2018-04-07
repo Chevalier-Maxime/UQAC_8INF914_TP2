@@ -502,7 +502,6 @@ public class Main_window extends javax.swing.JFrame {
         );
 
         jPanel6.setBackground(new java.awt.Color(255, 255, 255));
-        jPanel6.setBorder(new LineBorder(Color.blue, 2, true));
         jPanel6.setPreferredSize(new java.awt.Dimension(155, 316));
 
         jPanel25.setBackground(new java.awt.Color(15, 15, 136));
